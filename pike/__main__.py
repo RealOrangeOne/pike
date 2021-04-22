@@ -3,6 +3,7 @@ import copy
 from pathlib import Path
 from typing import List, Optional
 
+from pike.task import load_tasks
 from pike.utils import noop
 
 DEFAULT_FILE_NAME = "pikefile.py"
@@ -49,7 +50,7 @@ def get_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
 
 def main():
     args = get_args()
-    print("Got args", args)
+    print(load_tasks(args.file))
 
 
 if __name__ == "__main__":
