@@ -8,5 +8,5 @@ set -x
 
 black --check pike/ setup.py
 flake8 pike/ setup.py
-isort pike/ setup.py
+isort --check pike/ setup.py
 mypy pike/ setup.py
