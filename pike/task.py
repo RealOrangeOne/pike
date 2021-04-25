@@ -1,3 +1,4 @@
+from functools import lru_cache
 from inspect import Parameter as InspectParameter
 from inspect import Signature, getmodule
 from pathlib import Path
@@ -66,6 +67,7 @@ class Task(NamedTuple):
         return params
 
 
+@lru_cache()
 def load_tasks(pikefile: Path) -> Set[Task]:
     pikefile_data = import_file(pikefile)
     tasks = set()

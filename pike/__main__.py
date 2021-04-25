@@ -1,7 +1,7 @@
 import argparse
 import copy
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from pike.task import Parameter, Task, load_tasks
 from pike.utils import noop
@@ -55,12 +55,15 @@ def get_file_argument(
     return file_path
 
 
-def get_parser(argv: Optional[List[str]] = None) -> argparse.ArgumentParser:
+def get_parser_and_file(
+    argv: Optional[List[str]] = None,
+) -> Tuple[argparse.ArgumentParser, Path]:
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
         "--file", "-f", default=DEFAULT_FILE_NAME, help="(default: %(default)s)"
     )
+    parser.add_argument("--list", action="store_true", help="List tasks")
 
     file = get_file_argument(parser, argv)
 
@@ -77,7 +80,7 @@ def get_parser(argv: Optional[List[str]] = None) -> argparse.ArgumentParser:
     except SyntaxError as e:
         parser.error(f"Syntax error in file: {e}")
 
-    return parser
+    return parser, file
 
 
 def run_task(task: Task, args: argparse.Namespace):
@@ -94,9 +97,12 @@ def run_task(task: Task, args: argparse.Namespace):
 
 
 def main():
-    parser = get_parser()
+    parser, file = get_parser_and_file()
     args = parser.parse_args()
-    if getattr(args, "task", None):
+
+    if args.list:
+        print(" ".join([task.name for task in load_tasks(file)]))
+    elif getattr(args, "task", None):
         run_task(args.task, args)
     else:
         parser.print_help()
