@@ -8,7 +8,7 @@ set -x
 
 pytest --verbose --cov pike/ --cov-report term --cov-report html tests/
 
-black --check pike/ setup.py
-flake8 pike/ setup.py
-isort --check pike/ setup.py
-mypy pike/ setup.py
+black --check pike/ tests/ setup.py
+flake8 pike/ tests/ setup.py
+isort --check pike/ tests/ setup.py
+mypy pike/ tests/ setup.py
