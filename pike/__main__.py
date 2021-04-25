@@ -13,16 +13,19 @@ def contribute_parameter(parser: argparse.ArgumentParser, param: Parameter):
     argument_kwargs: dict = {}
     if param.param_type:
         argument_kwargs["type"] = param.param_type
+    if param.description:
+        argument_kwargs["help"] = param.description
 
     if param.has_default:
+        argument_kwargs["help"] += " (default: %(default)s)"
         parser.add_argument(
             "--" + param.name,
-            **argument_kwargs,
             default=param.default,
-            help="(default: %(default)s)",
+            **argument_kwargs,
         )
     elif param.is_var_positional:
-        parser.add_argument(param.name, nargs="*")
+        del argument_kwargs["type"]
+        parser.add_argument(param.name, nargs="*", **argument_kwargs)
     else:
         parser.add_argument(param.name, **argument_kwargs)
 
@@ -67,7 +70,7 @@ def get_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
 
     try:
         for task in load_tasks(file):
-            task_parser = subparsers.add_parser(task.name)
+            task_parser = subparsers.add_parser(task.name, description=task.description)
             for p in task.parameters:
                 contribute_parameter(task_parser, p)
             task_parser.set_defaults(task=task)

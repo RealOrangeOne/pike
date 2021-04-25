@@ -14,7 +14,9 @@ setup(
     license="BSD",
     packages=find_packages(include="pike*"),
     package_data={"pike": ["py.typed"]},
-    install_requires=[],
+    install_requires=[
+        "docstring-parser",
+    ],
     project_urls={
         "Changelog": "https://github.com/RealOrangeOne/pike/releases",
         "Issues": "https://github.com/RealOrangeOne/pike/issues",

@@ -3,6 +3,8 @@ from inspect import Signature, getmodule
 from pathlib import Path
 from typing import Any, Callable, NamedTuple, Optional, Set, Type
 
+import docstring_parser
+
 from .utils import import_file
 
 
@@ -11,6 +13,7 @@ class Parameter(NamedTuple):
     kind: int
     param_type: Optional[Type]
     default: Any
+    description: Optional[str]
 
     @property
     def has_default(self):
@@ -30,8 +33,20 @@ class Task(NamedTuple):
         return Signature.from_callable(self.method)
 
     @property
+    def parsed_docstring(self):
+        return docstring_parser.parse(self.method.__doc__)
+
+    @property
+    def description(self):
+        return (
+            self.parsed_docstring.long_description
+            or self.parsed_docstring.short_description
+        )
+
+    @property
     def parameters(self):
         params = []
+        param_help = {a.arg_name: a.description for a in self.parsed_docstring.params}
         for p in self.signature.parameters.values():
             params.append(
                 Parameter(
@@ -40,6 +55,7 @@ class Task(NamedTuple):
                     param_type=p.annotation
                     if p.annotation != InspectParameter.empty
                     else None,
+                    description=param_help.get(p.name),
                     default=p.default,
                 )
             )
