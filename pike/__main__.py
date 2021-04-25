@@ -3,7 +3,7 @@ import copy
 from pathlib import Path
 from typing import List, Optional
 
-from pike.task import Parameter, load_tasks
+from pike.task import Parameter, Task, load_tasks
 from pike.utils import noop
 
 DEFAULT_FILE_NAME = "pikefile.py"
@@ -55,7 +55,7 @@ def get_file_argument(
     return file_path
 
 
-def get_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
+def get_parser(argv: Optional[List[str]] = None) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
@@ -77,12 +77,29 @@ def get_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     except SyntaxError as e:
         parser.error(f"Syntax error in file: {e}")
 
-    return parser.parse_args(args=argv)
+    return parser
+
+
+def run_task(task: Task, args: argparse.Namespace):
+    task_args = []
+    task_kwargs = {}
+    for p in task.parameters:
+        arg_value = getattr(args, p.name)
+        if p.is_var_positional:
+            task_args.extend(arg_value)
+        else:
+            task_kwargs[p.name] = arg_value
+
+    task.method(*task_args, **task_kwargs)
 
 
 def main():
-    args = get_args()
-    print(args)
+    parser = get_parser()
+    args = parser.parse_args()
+    if getattr(args, "task", None):
+        run_task(args.task, args)
+    else:
+        parser.print_help()
 
 
 if __name__ == "__main__":
