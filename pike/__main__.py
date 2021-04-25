@@ -3,10 +3,28 @@ import copy
 from pathlib import Path
 from typing import List, Optional
 
-from pike.task import load_tasks
+from pike.task import Parameter, load_tasks
 from pike.utils import noop
 
 DEFAULT_FILE_NAME = "pikefile.py"
+
+
+def contribute_parameter(parser: argparse.ArgumentParser, param: Parameter):
+    argument_kwargs: dict = {}
+    if param.param_type:
+        argument_kwargs["type"] = param.param_type
+
+    if param.has_default:
+        parser.add_argument(
+            "--" + param.name,
+            **argument_kwargs,
+            default=param.default,
+            help="(default: %(default)s)",
+        )
+    elif param.is_var_positional:
+        parser.add_argument(param.name, nargs="*")
+    else:
+        parser.add_argument(param.name, **argument_kwargs)
 
 
 def get_file_argument(
@@ -43,14 +61,25 @@ def get_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
 
     file = get_file_argument(parser, argv)
 
-    args = parser.parse_args(args=argv)
-    args.file = file  # Poke the file back in
-    return args
+    subparsers = parser.add_subparsers(
+        title="Tasks", description="Things to run", dest="task_name"
+    )
+
+    try:
+        for task in load_tasks(file):
+            task_parser = subparsers.add_parser(task.name)
+            for p in task.parameters:
+                contribute_parameter(task_parser, p)
+            task_parser.set_defaults(task=task)
+    except SyntaxError as e:
+        parser.error(f"Syntax error in file: {e}")
+
+    return parser.parse_args(args=argv)
 
 
 def main():
     args = get_args()
-    print(load_tasks(args.file))
+    print(args)
 
 
 if __name__ == "__main__":
