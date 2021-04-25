@@ -28,6 +28,10 @@ class Task(NamedTuple):
     name: str
     method: Callable
 
+    @classmethod
+    def from_callable(cls, method: Callable):
+        return cls(name=method.__name__, method=method)
+
     @property
     def signature(self):
         return Signature.from_callable(self.method)
@@ -39,8 +43,8 @@ class Task(NamedTuple):
     @property
     def description(self):
         return (
-            self.parsed_docstring.long_description
-            or self.parsed_docstring.short_description
+            self.parsed_docstring.short_description
+            or self.parsed_docstring.long_description
         )
 
     @property
@@ -75,6 +79,6 @@ def load_tasks(pikefile: Path) -> Set[Task]:
         if getmodule(val) is not None:
             continue
 
-        tasks.add(Task(name=name, method=val))
+        tasks.add(Task.from_callable(val))
 
     return tasks
