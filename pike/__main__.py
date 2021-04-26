@@ -19,15 +19,15 @@ def contribute_parameter(parser: argparse.ArgumentParser, param: Parameter):
     if param.has_default:
         argument_kwargs["help"] += " (default: %(default)s)"
         parser.add_argument(
-            "--" + param.name,
+            "--" + param.display_name,
             default=param.default,
             **argument_kwargs,
         )
     elif param.is_var_positional:
         del argument_kwargs["type"]
-        parser.add_argument(param.name, nargs="*", **argument_kwargs)
+        parser.add_argument(param.display_name, nargs="*", **argument_kwargs)
     else:
-        parser.add_argument(param.name, **argument_kwargs)
+        parser.add_argument(param.display_name, **argument_kwargs)
 
 
 def get_file_argument(

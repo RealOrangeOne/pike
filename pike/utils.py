@@ -20,3 +20,10 @@ def import_file(path: Path) -> Dict[str, Any]:
     mod = module_from_spec(spec)
     loader.exec_module(mod)
     return vars(mod)
+
+
+def to_spine_case(original: str) -> str:
+    """
+    Convert this_thing to this-thing.
+    """
+    return original.lower().replace("_", "-")

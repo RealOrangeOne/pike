@@ -6,11 +6,12 @@ from typing import Any, Callable, NamedTuple, Optional, Set, Type
 
 import docstring_parser
 
-from .utils import import_file
+from .utils import import_file, to_spine_case
 
 
 class Parameter(NamedTuple):
     name: str
+    display_name: str
     kind: int
     param_type: Optional[Type]
     default: Any
@@ -31,7 +32,7 @@ class Task(NamedTuple):
 
     @classmethod
     def from_callable(cls, method: Callable):
-        return cls(name=method.__name__.lower().replace("_", "-"), method=method)
+        return cls(name=to_spine_case(method.__name__), method=method)
 
     @property
     def signature(self):
@@ -56,6 +57,7 @@ class Task(NamedTuple):
             params.append(
                 Parameter(
                     name=p.name,
+                    display_name=to_spine_case(p.name),
                     kind=p.kind,
                     param_type=p.annotation
                     if p.annotation != InspectParameter.empty
