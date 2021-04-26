@@ -1,11 +1,10 @@
 from inspect import Parameter as InspectParameter
-from inspect import Signature, getmodule
-from pathlib import Path
-from typing import Any, Callable, NamedTuple, Optional, Set, Type
+from inspect import Signature
+from typing import Any, Callable, NamedTuple, Optional, Type
 
 import docstring_parser
 
-from .utils import import_file, to_spine_case
+from .utils import to_spine_case
 
 
 class Parameter(NamedTuple):
@@ -66,40 +65,3 @@ class Task(NamedTuple):
                 )
             )
         return params
-
-
-class TaskRegistry:
-    """
-    Keep track of tasks
-    """
-
-    _tasks: Set[Task]
-
-    def __init__(self, pikefile: Path):
-        self.pikefile = pikefile
-        self._tasks = set()
-
-    def _load(self):
-        """
-        Actually load the tasks
-        """
-        self._tasks.clear()
-        pikefile_data = import_file(self.pikefile)
-        for name, val in pikefile_data.items():
-            if name.startswith("_"):
-                continue
-
-            if not callable(val):
-                continue
-
-            if getmodule(val) is not None:
-                continue
-
-            self._tasks.add(Task.from_callable(val))
-
-    @property
-    def tasks(self) -> Set[Task]:
-        if not self._tasks:
-            self._load()
-
-        return self._tasks

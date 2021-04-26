@@ -3,7 +3,8 @@ import copy
 from pathlib import Path
 from typing import List, Optional, Tuple
 
-from pike.task import Parameter, Task, TaskRegistry
+from pike.registry import TaskRegistry
+from pike.task import Parameter, Task
 from pike.utils import noop
 
 DEFAULT_FILE_NAME = "pikefile.py"
@@ -64,6 +65,7 @@ def get_parser_and_tasks(
         "--file", "-f", default=DEFAULT_FILE_NAME, help="(default: %(default)s)"
     )
     parser.add_argument("--list", action="store_true", help="List tasks")
+    parser.add_argument("--validate", action="store_true", help="Validate tasks")
 
     file = get_file_argument(parser, argv)
 
@@ -72,6 +74,8 @@ def get_parser_and_tasks(
     )
 
     task_registry = TaskRegistry(file)
+
+    task_registry.validate_and_exit()
 
     try:
         for task in task_registry.tasks:
@@ -104,6 +108,8 @@ def main():
 
     if args.list:
         print(" ".join([task.name for task in task_registry.tasks]))
+    elif args.validate:
+        task_registry.validate_and_exit(level=0)
     elif getattr(args, "task", None):
         run_task(args.task, args)
     else:
