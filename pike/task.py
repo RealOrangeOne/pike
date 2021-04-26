@@ -31,7 +31,7 @@ class Task(NamedTuple):
 
     @classmethod
     def from_callable(cls, method: Callable):
-        return cls(name=method.__name__, method=method)
+        return cls(name=method.__name__.lower().replace("_", "-"), method=method)
 
     @property
     def signature(self):

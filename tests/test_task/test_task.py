@@ -6,7 +6,7 @@ def test_from_callable():
         pass
 
     task = Task.from_callable(task_callable)
-    assert task.name == "task_callable"
+    assert task.name == "task-callable"
     assert task.method == task_callable
 
 
@@ -18,7 +18,7 @@ def test_reads_docstring():
         pass
 
     task = Task.from_callable(task_callable)
-    assert task.name == "task_callable"
+    assert task.name == "task-callable"
     assert task.method == task_callable
     assert task.description == "The content of the task"
 
