@@ -65,3 +65,14 @@ def test_duplicate_named_tasks():
     assert error.task_name is None
     assert error.message == "Found 2 tasks with name 'task-callable'"
     assert error.level == logging.WARNING
+
+
+def test_no_tasks():
+    errors = list(validate_tasks(set()))
+
+    assert len(errors) == 1
+    error = errors[0]
+
+    assert error.task_name is None
+    assert error.message == "No tasks found"
+    assert error.level == logging.WARNING

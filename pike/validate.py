@@ -20,6 +20,9 @@ class Error(NamedTuple):
 
 
 def validate_tasks(tasks: Set[Task]) -> Generator[Error, None, None]:
+    if not tasks:
+        yield Error(None, "No tasks found", level=logging.WARNING)
+
     for task_name, counter in Counter([task.name for task in tasks]).items():
         if counter > 1:
             yield Error(
