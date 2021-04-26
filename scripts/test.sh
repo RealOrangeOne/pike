@@ -12,5 +12,5 @@ black --check pike/ tests/ examples/ setup.py pikefile.py
 flake8 pike/ tests/ examples/ setup.py pikefile.py
 isort --check pike/ tests/ examples/ setup.py pikefile.py
 
-mypy pike/ tests/ setup.py pikefile.py
+mypy pike/ tests/ setup.py pikefile.py --show-error-codes
 mypy examples/
