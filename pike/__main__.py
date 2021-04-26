@@ -3,7 +3,7 @@ import copy
 from pathlib import Path
 from typing import List, Optional, Tuple
 
-from pike.task import Parameter, Task, load_tasks
+from pike.task import Parameter, Task, TaskRegistry
 from pike.utils import noop
 
 DEFAULT_FILE_NAME = "pikefile.py"
@@ -55,9 +55,9 @@ def get_file_argument(
     return file_path
 
 
-def get_parser_and_file(
+def get_parser_and_tasks(
     argv: Optional[List[str]] = None,
-) -> Tuple[argparse.ArgumentParser, Path]:
+) -> Tuple[argparse.ArgumentParser, TaskRegistry]:
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
@@ -71,8 +71,10 @@ def get_parser_and_file(
         title="Tasks", description="Things to run", dest="task_name"
     )
 
+    task_registry = TaskRegistry(file)
+
     try:
-        for task in load_tasks(file):
+        for task in task_registry.tasks:
             task_parser = subparsers.add_parser(task.name, description=task.description)
             for p in task.parameters:
                 contribute_parameter(task_parser, p)
@@ -80,7 +82,7 @@ def get_parser_and_file(
     except SyntaxError as e:
         parser.error(f"Syntax error in file: {e}")
 
-    return parser, file
+    return parser, task_registry
 
 
 def run_task(task: Task, args: argparse.Namespace):
@@ -97,11 +99,11 @@ def run_task(task: Task, args: argparse.Namespace):
 
 
 def main():
-    parser, file = get_parser_and_file()
+    parser, task_registry = get_parser_and_tasks()
     args = parser.parse_args()
 
     if args.list:
-        print(" ".join([task.name for task in load_tasks(file)]))
+        print(" ".join([task.name for task in task_registry.tasks]))
     elif getattr(args, "task", None):
         run_task(args.task, args)
     else:

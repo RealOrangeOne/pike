@@ -1,4 +1,3 @@
-from functools import lru_cache
 from inspect import Parameter as InspectParameter
 from inspect import Signature, getmodule
 from pathlib import Path
@@ -69,20 +68,38 @@ class Task(NamedTuple):
         return params
 
 
-@lru_cache()
-def load_tasks(pikefile: Path) -> Set[Task]:
-    pikefile_data = import_file(pikefile)
-    tasks = set()
-    for name, val in pikefile_data.items():
-        if name.startswith("_"):
-            continue
+class TaskRegistry:
+    """
+    Keep track of tasks
+    """
 
-        if not callable(val):
-            continue
+    _tasks: Set[Task]
 
-        if getmodule(val) is not None:
-            continue
+    def __init__(self, pikefile: Path):
+        self.pikefile = pikefile
+        self._tasks = set()
 
-        tasks.add(Task.from_callable(val))
+    def _load(self):
+        """
+        Actually load the tasks
+        """
+        self._tasks.clear()
+        pikefile_data = import_file(self.pikefile)
+        for name, val in pikefile_data.items():
+            if name.startswith("_"):
+                continue
 
-    return tasks
+            if not callable(val):
+                continue
+
+            if getmodule(val) is not None:
+                continue
+
+            self._tasks.add(Task.from_callable(val))
+
+    @property
+    def tasks(self) -> Set[Task]:
+        if not self._tasks:
+            self._load()
+
+        return self._tasks
