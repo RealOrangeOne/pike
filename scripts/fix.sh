@@ -6,5 +6,5 @@ export PATH=env/bin:${PATH}
 
 set -x
 
-black pike/ tests/ setup.py
-isort pike/ tests/ setup.py
+black pike/ tests/ examples/ setup.py pikefile.py
+isort pike/ tests/ examples/ setup.py pikefile.py
