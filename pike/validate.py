@@ -24,7 +24,7 @@ def validate_tasks(tasks: Set[Task]) -> Generator[Error, None, None]:
         if counter > 1:
             yield Error(
                 None,
-                f"Found {counter} tasks found with name '{task_name}'",
+                f"Found {counter} tasks with name '{task_name}'",
                 level=logging.WARNING,
             )
 
@@ -41,7 +41,7 @@ def validate_parameter(task: Task, param: Parameter) -> Generator[Error, None, N
     if param.param_type and not isinstance(param.param_type, type):
         yield Error(
             task.name,
-            f"Argument {param.name} is of invalid type {param.param_type}.",
+            f"Argument {param.name} is of invalid type {param.param_type}",
             level=logging.ERROR,
         )
 
@@ -49,6 +49,6 @@ def validate_parameter(task: Task, param: Parameter) -> Generator[Error, None, N
         if not isinstance(param.default, param.param_type):
             yield Error(
                 task.name,
-                f"Default value of {param.name} ({param.default}) doesn't match its type {param.param_type}",
-                level=logging.ERROR,
+                f"Default value of {param.name} ({param.default}) doesn't match its type {param.param_type.__name__}",
+                level=logging.WARNING,
             )
