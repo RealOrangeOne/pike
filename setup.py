@@ -21,7 +21,7 @@ setup(
         "Changelog": "https://github.com/RealOrangeOne/pike/releases",
         "Issues": "https://github.com/RealOrangeOne/pike/issues",
     },
-    entry_points={"console_scripts": ["pike=pike.__main__:main"]},
+    entry_points={"console_scripts": ["pike=pike.cli:main"]},
     python_requires=">=3.7",
     classifiers=[
         "Development Status :: 4 - Beta",
