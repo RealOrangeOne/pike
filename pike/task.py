@@ -1,3 +1,4 @@
+from argparse import Namespace
 from inspect import Parameter as InspectParameter
 from inspect import Signature
 from typing import Any, Callable, NamedTuple, Optional, Type
@@ -65,3 +66,15 @@ class Task(NamedTuple):
                 )
             )
         return params
+
+    def run(self, args: Namespace):
+        task_args = []
+        task_kwargs = {}
+        for p in self.parameters:
+            arg_value = getattr(args, p.name)
+            if p.is_var_positional:
+                task_args.extend(arg_value)
+            else:
+                task_kwargs[p.name] = arg_value
+
+        return self.method(*task_args, **task_kwargs)

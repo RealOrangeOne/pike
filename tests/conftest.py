@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from pike.__main__ import DEFAULT_FILE_NAME
+from pike import DEFAULT_FILE_NAME
 
 ROOT = Path(__file__).parents[1]
 

@@ -3,11 +3,10 @@ import copy
 from pathlib import Path
 from typing import List, Optional, Tuple
 
+from pike import DEFAULT_FILE_NAME
 from pike.registry import TaskRegistry
-from pike.task import Parameter, Task
+from pike.task import Parameter
 from pike.utils import noop
-
-DEFAULT_FILE_NAME = "pikefile.py"
 
 
 def contribute_parameter(parser: argparse.ArgumentParser, param: Parameter):
@@ -89,19 +88,6 @@ def get_parser_and_tasks(
     return parser, task_registry
 
 
-def run_task(task: Task, args: argparse.Namespace):
-    task_args = []
-    task_kwargs = {}
-    for p in task.parameters:
-        arg_value = getattr(args, p.name)
-        if p.is_var_positional:
-            task_args.extend(arg_value)
-        else:
-            task_kwargs[p.name] = arg_value
-
-    task.method(*task_args, **task_kwargs)
-
-
 def main():
     parser, task_registry = get_parser_and_tasks()
     args = parser.parse_args()
@@ -111,6 +97,6 @@ def main():
     elif args.validate:
         task_registry.validate_and_exit(level=0)
     elif getattr(args, "task", None):
-        run_task(args.task, args)
+        args.task.run(args)
     else:
         parser.print_help()
