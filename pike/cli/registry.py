@@ -1,7 +1,7 @@
 import logging
 from inspect import getmodule
 from pathlib import Path
-from typing import Generator, Set
+from typing import Generator, Optional, Set
 
 from pike.task import Task
 from pike.utils import import_file
@@ -54,3 +54,9 @@ class TaskRegistry:
             for error in critical_errors:
                 error.show()
             exit(1)
+
+    def get_task(self, name: str) -> Optional[Task]:
+        for task in self.tasks:
+            if task.name == name:
+                return task
+        return None

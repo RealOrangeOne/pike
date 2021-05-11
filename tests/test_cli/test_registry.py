@@ -40,3 +40,13 @@ def test_validate_and_exit_fail(example_pikefile: Path):
 
     with pytest.raises(SystemExit):
         registry.validate_and_exit()
+
+
+def test_gets_task(example_pikefile: Path):
+    registry = TaskRegistry(example_pikefile)
+
+    task = registry.get_task("do-thing")
+    assert task is not None
+
+    assert task.name == "do-thing"
+    assert task.parameters[0].name == "thing"
