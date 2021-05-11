@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from pike.registry import TaskRegistry
+from pike.cli.registry import TaskRegistry
 from pike.task import Task
 
 

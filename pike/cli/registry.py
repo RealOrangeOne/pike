@@ -3,8 +3,9 @@ from inspect import getmodule
 from pathlib import Path
 from typing import Generator, Set
 
-from .task import Task
-from .utils import import_file
+from pike.task import Task
+from pike.utils import import_file
+
 from .validate import Error, validate_tasks
 
 

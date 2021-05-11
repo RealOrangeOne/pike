@@ -2,7 +2,7 @@ import logging
 from collections import Counter
 from typing import Generator, NamedTuple, Optional, Set
 
-from .task import Parameter, Task
+from pike.task import Parameter, Task
 
 
 class Error(NamedTuple):

@@ -1,7 +1,7 @@
 import logging
 
+from pike.cli.validate import validate_task, validate_tasks
 from pike.task import Task
-from pike.validate import validate_task, validate_tasks
 
 
 def test_valid_task():
