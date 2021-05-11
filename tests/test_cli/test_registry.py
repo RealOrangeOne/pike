@@ -10,8 +10,8 @@ def test_lazy_tasks(example_pikefile: Path):
     registry = TaskRegistry(example_pikefile)
 
     assert len(registry._tasks) == 0
-    assert len(registry.tasks) == 1
-    assert len(registry._tasks) == 1
+    assert len(registry.tasks) == 2
+    assert len(registry._tasks) == 2
 
 
 def test_validate(example_pikefile: Path):
@@ -49,4 +49,14 @@ def test_gets_task(example_pikefile: Path):
     assert task is not None
 
     assert task.name == "do-thing"
+    assert task.parameters[0].name == "thing"
+
+
+def test_wrapped_task(example_pikefile: Path):
+    registry = TaskRegistry(example_pikefile)
+
+    task = registry.get_task("wrapped-task")
+    assert task is not None
+
+    assert len(task.parameters) == 1
     assert task.parameters[0].name == "thing"
