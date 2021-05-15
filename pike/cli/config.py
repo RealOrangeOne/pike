@@ -17,7 +17,6 @@ class PikeFile:
     DEFAULT_FILE_NAME = "pikefile.py"
 
     def __init__(self, path: Path):
-        assert path.is_file()
         self.path = path
         self._tasks: Set[Task] = set()
 
