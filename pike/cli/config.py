@@ -21,7 +21,7 @@ class PikeFile:
         self._tasks: Set[Task] = set()
 
     @classmethod
-    def discover(cls, path: Path) -> Optional[Path]:
+    def discover_path(cls, path: Path) -> Optional[Path]:
         """
         Discover a pikefile in the provided `path` or any of its parents
         """
@@ -30,6 +30,13 @@ class PikeFile:
             if candidate_file.is_file():
                 return candidate_file
         return None
+
+    @classmethod
+    def discover(cls, path: Path) -> Optional["PikeFile"]:
+        discovered_path = cls.discover_path(path)
+        if discovered_path is not None:
+            return cls(discovered_path)
+        return discovered_path
 
     def _load(self):
         """
@@ -71,3 +78,9 @@ class PikeFile:
             if task.name == name:
                 return task
         return None
+
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+
+        return self.path == other.path

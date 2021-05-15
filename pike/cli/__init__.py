@@ -49,7 +49,7 @@ def get_file_argument(
 
     if file_argument is None:
         # Not provided, discover
-        file_path = PikeFile.discover(Path.cwd())
+        file_path = PikeFile.discover_path(Path.cwd())
         if file_path is None:
             parser.error(
                 f"Could not discover a {PikeFile.DEFAULT_FILE_NAME} in {str(Path.cwd())} or any of its parents"

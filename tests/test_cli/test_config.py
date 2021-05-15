@@ -62,6 +62,15 @@ def test_wrapped_task(example_pikefile_path: Path):
     assert task.parameters[0].name == "thing"
 
 
+def test_discover_path(example_pikefile_path: Path, root: Path):
+    assert PikeFile.discover_path(example_pikefile_path.parent) == example_pikefile_path
+    assert PikeFile.discover_path(root / "tests") == root / PikeFile.DEFAULT_FILE_NAME
+
+
 def test_discover(example_pikefile_path: Path, root: Path):
-    assert PikeFile.discover(example_pikefile_path.parent) == example_pikefile_path
-    assert PikeFile.discover(root / "tests") == root / PikeFile.DEFAULT_FILE_NAME
+    assert PikeFile.discover(example_pikefile_path.parent) == PikeFile(
+        example_pikefile_path
+    )
+    assert PikeFile.discover(root / "tests") == PikeFile(
+        root / PikeFile.DEFAULT_FILE_NAME
+    )
