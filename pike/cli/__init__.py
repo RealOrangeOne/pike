@@ -71,7 +71,7 @@ def get_parser_and_config(
     parser.add_argument(
         "--file",
         "-f",
-        help="(default: %(default)s)",
+        help=f"{PikeFile.DEFAULT_FILE_NAME} to use. If not provided, look in the current working directory and all its parents",
     )
     parser.add_argument("--list", action="store_true", help="List tasks")
     parser.add_argument("--validate", action="store_true", help="Validate tasks")
