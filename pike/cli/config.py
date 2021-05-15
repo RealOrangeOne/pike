@@ -3,29 +3,29 @@ from inspect import getmodule
 from pathlib import Path
 from typing import Generator, Optional, Set
 
+from pike.cli.validate import Error, validate_tasks
 from pike.task import Task
 from pike.utils import import_file
 
-from .validate import Error, validate_tasks
 
-
-class TaskRegistry:
+class PikeFile:
     """
-    Keep track of tasks
+    Class to track the pikefile
     """
 
-    _tasks: Set[Task]
+    DEFAULT_FILE_NAME = "pikefile.py"
 
-    def __init__(self, pikefile: Path):
-        self.pikefile = pikefile
-        self._tasks = set()
+    def __init__(self, path: Path):
+        assert path.is_file()
+        self.path = path
+        self._tasks: Set[Task] = set()
 
     def _load(self):
         """
-        Actually load the tasks
+        Actually load the file
         """
         self._tasks.clear()
-        pikefile_data = import_file(self.pikefile)
+        pikefile_data = import_file(self.path)
         for name, val in pikefile_data.items():
             if name.startswith("_"):
                 continue

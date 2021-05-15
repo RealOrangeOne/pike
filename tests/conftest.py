@@ -2,14 +2,14 @@ from pathlib import Path
 
 import pytest
 
-from pike import DEFAULT_FILE_NAME
+from pike.cli.config import PikeFile
 
 ROOT = Path(__file__).parents[1]
 
 
 @pytest.fixture
 def example_pikefile() -> Path:
-    return ROOT / "examples" / DEFAULT_FILE_NAME
+    return ROOT / "examples" / PikeFile.DEFAULT_FILE_NAME
 
 
 @pytest.fixture

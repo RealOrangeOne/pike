@@ -3,11 +3,10 @@ import copy
 from pathlib import Path
 from typing import List, Optional, Tuple
 
-from pike import DEFAULT_FILE_NAME
 from pike.task import Parameter
 from pike.utils import noop
 
-from .registry import TaskRegistry
+from .config import PikeFile
 
 
 def contribute_parameter(parser: argparse.ArgumentParser, param: Parameter):
@@ -56,13 +55,16 @@ def get_file_argument(
     return file_path
 
 
-def get_parser_and_tasks(
+def get_parser_and_config(
     argv: Optional[List[str]] = None,
-) -> Tuple[argparse.ArgumentParser, TaskRegistry]:
+) -> Tuple[argparse.ArgumentParser, PikeFile]:
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        "--file", "-f", default=DEFAULT_FILE_NAME, help="(default: %(default)s)"
+        "--file",
+        "-f",
+        default=PikeFile.DEFAULT_FILE_NAME,
+        help="(default: %(default)s)",
     )
     parser.add_argument("--list", action="store_true", help="List tasks")
     parser.add_argument("--validate", action="store_true", help="Validate tasks")
@@ -73,12 +75,12 @@ def get_parser_and_tasks(
         title="Tasks", description="Things to run", dest="task_name"
     )
 
-    task_registry = TaskRegistry(file)
+    config = PikeFile(file)
 
-    task_registry.validate_and_exit()
+    config.validate_and_exit()
 
     try:
-        for task in task_registry.tasks:
+        for task in config.tasks:
             task_parser = subparsers.add_parser(task.name, description=task.description)
             for p in task.parameters:
                 contribute_parameter(task_parser, p)
@@ -86,17 +88,17 @@ def get_parser_and_tasks(
     except SyntaxError as e:
         parser.error(f"Syntax error in file: {e}")
 
-    return parser, task_registry
+    return parser, config
 
 
 def main():
-    parser, task_registry = get_parser_and_tasks()
+    parser, config = get_parser_and_config()
     args = parser.parse_args()
 
     if args.list:
-        print(" ".join([task.name for task in task_registry.tasks]))
+        print(" ".join([task.name for task in config.tasks]))
     elif args.validate:
-        task_registry.validate_and_exit(level=0)
+        config.validate_and_exit(level=0)
     elif getattr(args, "task", None):
         args.task.run(args)
     else:
