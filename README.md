@@ -1,4 +1,4 @@
-# pike
+# pike 🐟
 
 ![Tests Status](https://github.com/RealOrangeOne/pike/workflows/CI/badge.svg)
 ![PyPI](https://img.shields.io/pypi/v/pike-tasks.svg)
