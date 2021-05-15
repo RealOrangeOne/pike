@@ -1,5 +1,6 @@
 import logging
 from inspect import getmodule
+from itertools import chain
 from pathlib import Path
 from typing import Generator, Optional, Set
 
@@ -19,6 +20,17 @@ class PikeFile:
         assert path.is_file()
         self.path = path
         self._tasks: Set[Task] = set()
+
+    @classmethod
+    def discover(cls, path: Path) -> Optional[Path]:
+        """
+        Discover a pikefile in the provided `path` or any of its parents
+        """
+        for candidate_dir in chain([path], path.parents):
+            candidate_file = candidate_dir / cls.DEFAULT_FILE_NAME
+            if candidate_file.is_file():
+                return candidate_file
+        return None
 
     def _load(self):
         """

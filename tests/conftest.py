@@ -8,7 +8,7 @@ ROOT = Path(__file__).parents[1]
 
 
 @pytest.fixture
-def example_pikefile() -> Path:
+def example_pikefile_path() -> Path:
     return ROOT / "examples" / PikeFile.DEFAULT_FILE_NAME
 
 

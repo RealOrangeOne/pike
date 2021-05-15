@@ -41,16 +41,24 @@ def get_file_argument(
     pre_parser.print_usage = noop  # type:ignore
     pre_parser.print_help = noop  # type:ignore
     pre_parser.exit = noop  # type:ignore
-
     try:
-        file_path = Path(pre_parser.parse_args(args=argv).file).resolve()
+        file_argument = pre_parser.parse_args(args=argv).file
     except argparse.ArgumentError as e:
         # Throw a real error
         parser.error(str(e))
 
-    # Check it's a file
-    if not file_path.exists() or not file_path.is_file():
-        parser.error(f"File {file_path} either doesn't exist or isn't a file.")
+    if file_argument is None:
+        # Not provided, discover
+        file_path = PikeFile.discover(Path.cwd())
+        if file_path is None:
+            parser.error(
+                f"Could not discover a {PikeFile.DEFAULT_FILE_NAME} in {str(Path.cwd())} or any of its parents"
+            )
+    else:
+        file_path = Path(file_argument).resolve()
+        # Check it's a file
+        if not file_path.exists() or not file_path.is_file():
+            parser.error(f"File {file_path} either doesn't exist or isn't a file.")
 
     return file_path
 
@@ -63,7 +71,6 @@ def get_parser_and_config(
     parser.add_argument(
         "--file",
         "-f",
-        default=PikeFile.DEFAULT_FILE_NAME,
         help="(default: %(default)s)",
     )
     parser.add_argument("--list", action="store_true", help="List tasks")

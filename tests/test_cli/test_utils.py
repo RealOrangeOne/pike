@@ -20,10 +20,10 @@ def test_import_file(root):
     assert inspect.getsource(mod_vars["noop"]) == inspect.getsource(noop)
 
 
-def test_import_file_creates_no_bytecode(example_pikefile):
-    bytecode_path = cache_from_source(str(example_pikefile))
+def test_import_file_creates_no_bytecode(example_pikefile_path):
+    bytecode_path = cache_from_source(str(example_pikefile_path))
     assert not os.path.exists(bytecode_path)
-    import_file(example_pikefile)
+    import_file(example_pikefile_path)
     assert not os.path.exists(bytecode_path)
     bytecode_dir = os.path.dirname(bytecode_path)
     assert bytecode_dir.endswith(_PYCACHE)
