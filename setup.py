@@ -4,8 +4,8 @@ with open("README.md") as f:
     readme = f.read()
 
 setup(
-    name="pike",
-    version="0.0.0",
+    name="pike-tasks",
+    version="0.0.1",
     url="https://github.com/RealOrangeOne/pike",
     author="Jake Howard",
     description="Like make, but Python",
