@@ -1,5 +1,12 @@
 # pike
 
+![Tests Status](https://github.com/RealOrangeOne/pike/workflows/CI/badge.svg)
+![PyPI](https://img.shields.io/pypi/v/pike-tasks.svg)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pike-tasks.svg)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/pike-tasks.svg)
+![PyPI - Status](https://img.shields.io/pypi/status/pike-tasks.svg)
+![PyPI - License](https://img.shields.io/pypi/l/pike-tasks.svg)
+
 It's `make`, but Python.
 
 ## Example
