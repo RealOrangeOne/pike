@@ -7,7 +7,7 @@
 ![PyPI - Status](https://img.shields.io/pypi/status/pike-tasks.svg)
 ![PyPI - License](https://img.shields.io/pypi/l/pike-tasks.svg)
 
-It's `make`, but Python.
+A simple task runner and build system - Designed to replace a [directory of bash scripts](https://github.com/github/scripts-to-rule-them-all).
 
 ## Example
 

@@ -8,7 +8,7 @@ setup(
     version="0.0.1",
     url="https://github.com/RealOrangeOne/pike",
     author="Jake Howard",
-    description="Like make, but Python",
+    description="A simple task runner / build system",
     long_description=readme,
     long_description_content_type="text/markdown",
     license="BSD",
