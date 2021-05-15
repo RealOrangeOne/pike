@@ -74,3 +74,12 @@ def test_discover(example_pikefile_path: Path, root: Path):
     assert PikeFile.discover(root / "tests") == PikeFile(
         root / PikeFile.DEFAULT_FILE_NAME
     )
+
+
+def test_description(example_pikefile_path: Path, root: Path):
+    example_config = PikeFile(example_pikefile_path)
+    root_config = PikeFile.discover(root)
+
+    assert root_config is not None
+    assert example_config.description == "An example pikefile"
+    assert root_config.description is None

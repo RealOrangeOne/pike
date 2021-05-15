@@ -83,8 +83,9 @@ def get_parser_and_config(
     )
 
     config = PikeFile(file)
-
     config.validate_and_exit()
+
+    parser.description = config.description
 
     try:
         for task in config.tasks:

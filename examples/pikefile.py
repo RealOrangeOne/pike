@@ -1,3 +1,7 @@
+"""
+An example pikefile
+"""
+
 from functools import wraps
 
 VARIABLE = "foo"

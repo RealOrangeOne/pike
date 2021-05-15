@@ -19,6 +19,7 @@ class PikeFile:
     def __init__(self, path: Path):
         self.path = path
         self._tasks: Set[Task] = set()
+        self._description: Optional[str] = None
 
     @classmethod
     def discover_path(cls, path: Path) -> Optional[Path]:
@@ -56,12 +57,22 @@ class PikeFile:
 
             self._tasks.add(Task.from_callable(val))
 
+        if pikefile_data["__doc__"] is not None:
+            self._description = pikefile_data["__doc__"].strip()
+
     @property
     def tasks(self) -> Set[Task]:
         if not self._tasks:
             self._load()
 
         return self._tasks
+
+    @property
+    def description(self) -> Optional[str]:
+        if self._description is None:
+            self._load()
+
+        return self._description
 
     def validate(self) -> Generator[Error, None, None]:
         return validate_tasks(self.tasks)
