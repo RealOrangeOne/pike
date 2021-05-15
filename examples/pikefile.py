@@ -8,6 +8,11 @@ VARIABLE = "foo"
 
 
 def do_thing(thing: str):
+    """
+    Do a thing, and do it perfectly
+
+    :param thing: The thing to do
+    """
     print("Doing", thing)
 
 
@@ -24,5 +29,5 @@ def _task_wrapper(f):
 
 
 @_task_wrapper
-def wrapped_task(thing: str):
+def wrapped_task(thing: str = "Rap"):
     pass

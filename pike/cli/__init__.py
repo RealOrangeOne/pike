@@ -13,8 +13,8 @@ def contribute_parameter(parser: argparse.ArgumentParser, param: Parameter):
     argument_kwargs: dict = {}
     if param.param_type:
         argument_kwargs["type"] = param.param_type
-    if param.description:
-        argument_kwargs["help"] = param.description
+
+    argument_kwargs["help"] = param.description or ""
 
     if param.has_default:
         argument_kwargs["help"] += " (default: %(default)s)"
